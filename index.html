@@ -28,7 +28,7 @@ body {
   --hdr-bg:#0f0d0a;
   --add-bg:#0f0d0a; --add-hover:#2a2420;
   --cpa:#4a8fbe; --dba:#9b72c8; --jobs:#d4734a;
-  --food:#7ab04a; --yoga:#4aadc0; --period:#d4507a; --groceries:#a09040;
+  --food:#7ab04a; --yoga:#4aadc0; --health:#d4507a; --groceries:#a09040;
   --shadow:0 1px 3px rgba(0,0,0,0.35),0 4px 16px rgba(0,0,0,0.25);
   /* day btn colours (dark inactive) */
   --d0-bg:#221414; --d0-bd:#3a1e1e; --d0-ink:#f0d0d0; --d0-mut:#6a3030; --d0-acc:#c0414a;
@@ -60,7 +60,7 @@ body[data-mode="light"] {
   --hdr-bg:#1a1208;
   --add-bg:#1a1208; --add-hover:#2e2418;
   --cpa:#1a4f7a; --dba:#5a2f90; --jobs:#a03510;
-  --food:#3a6a1e; --yoga:#1a6d7e; --period:#90205a; --groceries:#6a5b1e;
+  --food:#3a6a1e; --yoga:#1a6d7e; --health:#90205a; --groceries:#6a5b1e;
   --shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.06);
   /* day btn colours (light inactive = tinted white) */
   --d0-bg:#fdf0f0; --d0-bd:#c0414a; --d0-ink:#4a0a0e; --d0-mut:#8a1a24; --d0-acc:#c0414a;
@@ -202,7 +202,7 @@ body[data-mode="light"] .day-btn.active .day-count { color:rgba(255,255,255,0.94
 .sub-tab-btn.active[data-cat="jobs"]   { color:var(--jobs);   border-bottom-color:var(--jobs); }
 .sub-tab-btn.active[data-cat="food"]   { color:var(--food);   border-bottom-color:var(--food); }
 .sub-tab-btn.active[data-cat="yoga"]   { color:var(--yoga);   border-bottom-color:var(--yoga); }
-.sub-tab-btn.active[data-cat="period"] { color:var(--period); border-bottom-color:var(--period); }
+.sub-tab-btn.active[data-cat="health"] { color:var(--health); border-bottom-color:var(--health); }
 
 .sub-tab-panel { display:none; padding:14px 16px 16px; }
 .sub-tab-panel.active { display:block; }
@@ -226,7 +226,7 @@ body[data-mode="light"] .day-btn.active .day-count { color:rgba(255,255,255,0.94
 #panel-jobs   .task-cb:checked { background:var(--jobs); }
 #panel-food   .task-cb:checked { background:var(--food); }
 #panel-yoga   .task-cb:checked { background:var(--yoga); }
-#panel-period .task-cb:checked { background:var(--period); }
+#panel-health .task-cb:checked { background:var(--health); }
 .simple-body  .task-cb:checked { background:var(--groceries); }
 .task-text { flex:1; font-size:13.5px; color:var(--ink); line-height:1.4; }
 .task-item.done .task-text { text-decoration:line-through; color:var(--ink3); }
@@ -340,7 +340,7 @@ body[data-mode="light"] .day-btn.active .day-count { color:rgba(255,255,255,0.94
         <div class="sub-tabs-bar" id="tabbar-wellness">
           <button class="sub-tab-btn active" data-cat="food"   onclick="switchTab('wellness','food',this)">Food</button>
           <button class="sub-tab-btn"        data-cat="yoga"   onclick="switchTab('wellness','yoga',this)">Yoga</button>
-          <button class="sub-tab-btn"        data-cat="period" onclick="switchTab('wellness','period',this)">Period</button>
+          <button class="sub-tab-btn"        data-cat="health" onclick="switchTab('wellness','health',this)">health</button>
         </div>
         <div class="sub-tab-panel active" id="panel-food">
           <span class="cat-count-lbl" id="food-count">0/0 done</span>
@@ -352,10 +352,10 @@ body[data-mode="light"] .day-btn.active .day-count { color:rgba(255,255,255,0.94
           <div class="add-task-row"><input class="add-task-input" id="yoga-input" placeholder="Add a yoga session or goal…" onkeydown="if(event.key==='Enter')addTask('yoga')"><button class="add-task-btn" onclick="addTask('yoga')">+</button></div>
           <div class="task-list" id="yoga-list"></div>
         </div>
-        <div class="sub-tab-panel" id="panel-period">
-          <span class="cat-count-lbl" id="period-count">0/0 done</span>
-          <div class="add-task-row"><input class="add-task-input" id="period-input" placeholder="Log a symptom or note…" onkeydown="if(event.key==='Enter')addTask('period')"><button class="add-task-btn" onclick="addTask('period')">+</button></div>
-          <div class="task-list" id="period-list"></div>
+        <div class="sub-tab-panel" id="panel-health">
+          <span class="cat-count-lbl" id="health-count">0/0 done</span>
+          <div class="add-task-row"><input class="add-task-input" id="health-input" placeholder="Log a symptom or note…" onkeydown="if(event.key==='Enter')addTask('health')"><button class="add-task-btn" onclick="addTask('health')">+</button></div>
+          <div class="task-list" id="health-list"></div>
         </div>
       </div>
     </div>
@@ -395,8 +395,8 @@ body[data-mode="light"] .day-btn.active .day-count { color:rgba(255,255,255,0.94
 <script>
 /* ── CONSTANTS ── */
 const STORE = 'ritz_v3';
-const CATS  = ['cpa','dba','jobs','food','yoga','period','groceries'];
-const CAT_COLORS = {cpa:'#4a8fbe',dba:'#9b72c8',jobs:'#d4734a',food:'#7ab04a',yoga:'#4aadc0',period:'#d4507a',groceries:'#a09040'};
+const CATS  = ['cpa','dba','jobs','food','yoga','health','groceries'];
+const CAT_COLORS = {cpa:'#4a8fbe',dba:'#9b72c8',jobs:'#d4734a',food:'#7ab04a',yoga:'#4aadc0',health:'#d4507a',groceries:'#a09040'};
 const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -568,7 +568,7 @@ function deleteTask(cat, idx) {
 }
 
 function updateBadges(data) {
-  const g = { study:['cpa','dba','jobs'], wellness:['food','yoga','period'], groceries:['groceries'] };
+  const g = { study:['cpa','dba','jobs'], wellness:['food','yoga','health'], groceries:['groceries'] };
   Object.entries(g).forEach(([grp,cats]) => {
     let total=0, done=0;
     cats.forEach(c => { const t=data.tasks[c]||[]; total+=t.length; done+=t.filter(x=>x.done).length; });
@@ -608,7 +608,7 @@ function toggleCat(id) { document.getElementById('bigcat-'+id).classList.toggle(
 function switchTab(group, cat, btn) {
   document.getElementById('tabbar-'+group).querySelectorAll('.sub-tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const panels = { study:['cpa','dba','jobs'], wellness:['food','yoga','period'] };
+  const panels = { study:['cpa','dba','jobs'], wellness:['food','yoga','health'] };
   panels[group].forEach(c => document.getElementById('panel-'+c).classList.toggle('active', c===cat));
 }
 
